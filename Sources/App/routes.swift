@@ -1,4 +1,5 @@
 import Vapor
+<<<<<<< HEAD
 var runningGames = [Int: sudokuBoard] ()
 
 
@@ -10,10 +11,14 @@ var runningGames = [Int: sudokuBoard] ()
     return HTTPStatus.ok
 } */      
 //////////////////
+=======
+
+>>>>>>> ae99399c98ac9031c5e48bc2d18fd32e3e2ee80d
 func routes(_ app: Application) throws {
     app.get { req in
         return "It works!"
     }
+<<<<<<< HEAD
     
     app.post("games") {req -> [String:String] in
         let partialBoard = sudokuBoard(boardString: makeBoard())
@@ -38,3 +43,10 @@ func routes(_ app: Application) throws {
 }
 
 
+=======
+
+    app.get("hello") { req -> String in
+        return "Hello, world!"
+    }
+}
+>>>>>>> ae99399c98ac9031c5e48bc2d18fd32e3e2ee80d
