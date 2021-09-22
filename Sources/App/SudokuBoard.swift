@@ -395,7 +395,6 @@ func difficultySetting(difficulty:String){
 }
 
 
-
 func makeBoard() -> String{
     for x in 1 ... 81{
         Cells["\(x)"] = 0
@@ -404,11 +403,44 @@ func makeBoard() -> String{
     difficultySetting(difficulty:"Medium")
     return "\(printOut())"
 }
+    
 
+final class SudokuBoard: Content {
 
-struct sudokuBoard: Content {
+    var SuperCells = Dictionary< Int, Int>()
+
+    func makeTheThing(){
+        for x in 1 ... 81{
+            SuperCells[x] = Cells["\(x)"]
+        }
+    }
+
+    func printOut() -> String{
+        var printingBoard : String = ""
+        for x in 1 ... 81{
+            switch SuperCells[x]{
+            case 0:
+                //print("-", terminator: "  ")
+                printingBoard += "-  "
+            default:
+                //print(Cells["\(x)"]!, terminator: "  ")
+                printingBoard += "\(SuperCells[x]!)  "
+            }
+            if x % 9 == 0{
+                printingBoard += "\n"
+            }
+        }
+        return printingBoard
+    }
+    var boardID : Int = 1
     var id : Int
     var board : String
-    var hooplah : [String] = [makeBoard()]
+    
+}
+
+struct THEBoard : Content {
+    
+    var id : Int
+    var board : String
     
 }
