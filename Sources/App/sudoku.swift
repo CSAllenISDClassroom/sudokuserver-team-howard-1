@@ -58,7 +58,7 @@ func checkHor(x : Int){
             checking += 2
         }else if plus{
             checking += 1
-        }
+         }
         //print(checking)
     }
 }
@@ -189,7 +189,6 @@ func checkBox(x : Int){
             }
 
         }
-
     }
     if BoxFive.contains(x){
         for y in 0 ..< BoxFive.count{
@@ -392,8 +391,30 @@ func makeBoard() -> String{
     return "\(printOut())"
 }
 
+func alterCell(boardString: String, num: Int, boxIndex: Int, cellIndex: Int) -> String {
+    var rows = boardString.split(separator: "\n").map{String($0)}
+    for offset in 0..<rows.count {
+        var row = rows[offset]
+
+        var boxOffset = (offset / 3) * 3
+        var cellOffset = (offset * 3) % 9
+        var cells = row.split(separator: " ").map{String($0)}
+        for i in 0..<cells.count {
+            var cell = cells[i]
+
+            var cellNum = (i % 3) + cellOffset
+            var boxNum = (i / 3) + boxOffset
+            if (boxNum == boxIndex && cellNum == cellIndex) {
+                cells[i] = String(num)
+            }
+        }
+        rows[offset] = cells.joined(separator: " ")   
+    }
+
+    return rows.joined(separator: "\n")
+}
 
 struct sudokuBoard {
    
-    var boardString : [String] 
+    var boardString : String 
 }
