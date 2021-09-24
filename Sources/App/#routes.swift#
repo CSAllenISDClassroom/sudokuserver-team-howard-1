@@ -1,0 +1,24 @@
+import Vapor
+var name: String
+
+
+struct Server: Content {
+
+
+    ///////////////////////////
+    
+func routes(_ app: Application) throws {
+    app.get { req in
+        return "It works!"
+    }
+    
+    app.get("hello") { req -> String in
+        return "Hello, world!"
+    }
+    app.get("games", "id", "cells", "boxes") { req -> String in
+        return "Gonna have ID and cells and boxes and stuff here"
+        //HOW DO WE MAKE THE ID AND CELLS!!!
+    }
+    
+}
+}
