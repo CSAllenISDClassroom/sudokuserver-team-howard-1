@@ -3,7 +3,6 @@ import Vapor
 
 var Cells = Dictionary<String, Int>()
 
-
 func checkHor(x : Int){
     var checking = 1
     var plus = false
@@ -45,24 +44,21 @@ func checkHor(x : Int){
                 checking = 73
                 plus = true
             }
-
         }
 
         if currentCheck == Cells["\(checking)"] && Cells["\(x)"] != 0{
             //print("\(x) is now 0 due to \(checking) HOR")
             Cells["\(x)"] = 0
             plus = false
-
         }
+        
         if checking + 1 == x{
             checking += 2
         }else if plus{
             checking += 1
          }
-        //print(checking)
     }
 }
-
 
 func checkVer(x : Int){
     //var currentCheck = 0
@@ -70,8 +66,6 @@ func checkVer(x : Int){
     var plus = false
     //var BlankCheckVer = [0]
     //var x : Int
-
-    //print(x)
     var currentCheck = Cells["\(x)"]
     //checking = x
     plus = true
@@ -110,25 +104,23 @@ func checkVer(x : Int){
             }else if (x-9)%9 == 0{
                 checking = 9
                 plus = true
-
             }
-
         }
 
         if currentCheck == Cells["\(checking)"] && Cells["\(x)"] != 0{
             //print("\(x) is now 0 due to \(checking)")
             Cells["\(x)"] = 0
             plus = false
-
         }
         if checking + 9 == x{
             checking += 18
         }else if plus{
             checking += 9
         }
-        //print(checking)
     }
 }
+
+//creates an array of 9 numbers for each inidividual box 
 
 let BoxOne = [1,2,3,10,11,12,19,20,21]
 let BoxTwo = [4,5,6,13,14,15,22,23,24]
@@ -140,6 +132,8 @@ let BoxSeven = [55,56,57,64,65,66,73,74,75]
 let BoxEight = [58,59,60,67,68,69,76,77,78]
 let BoxNine = [61,62,63,70,71,72,79,80,81]
 
+//checking contents of each individual box
+
 func checkBox(x : Int){
     let currentCheck = Cells["\(x)"]
     if BoxOne.contains(x){
@@ -147,113 +141,96 @@ func checkBox(x : Int){
             if BoxOne[y] != x{
                 if Cells["\(BoxOne[y])"] == currentCheck && Cells["\(BoxOne[y])"] != 0{
                     Cells["\(x)"] = 0
-                    //print("BoxOne cell \(x)")
                 }
             }
-
         }
-
     }
+    
     if BoxTwo.contains(x){
         for y in 0 ..< BoxTwo.count{
             if BoxTwo[y] != x{
                 if Cells["\(BoxTwo[y])"] == currentCheck && Cells["\(BoxOne[y])"] != 0{
                     Cells["\(x)"] = 0
-                    //print("BoxTwo cell \(x)")
-
                 }
             }
-
         }
-
     }
+    
     if BoxThree.contains(x){
         for y in 0 ..< BoxThree.count{
             if BoxThree[y] != x{
                 if Cells["\(BoxThree[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
+    
     if BoxFour.contains(x){
         for y in 0 ..< BoxFour.count{
             if BoxFour[y] != x{
                 if Cells["\(BoxFour[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
     }
+    
     if BoxFive.contains(x){
         for y in 0 ..< BoxFive.count{
             if BoxFive[y] != x{
                 if Cells["\(BoxFive[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
+    
     if BoxSix.contains(x){
         for y in 0 ..< BoxSix.count{
             if BoxSix[y] != x{
                 if Cells["\(BoxSix[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
+    
     if BoxSeven.contains(x){
         for y in 0 ..< BoxSeven.count{
             if BoxSeven[y] != x{
                 if Cells["\(BoxSeven[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
+    
     if BoxEight.contains(x){
         for y in 0 ..< BoxEight.count{
             if BoxEight[y] != x{
                 if Cells["\(BoxEight[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
+    
     if BoxNine.contains(x){
         for y in 0 ..< BoxNine.count{
             if BoxNine[y] != x{
                 if Cells["\(BoxNine[y])"] == currentCheck && Cells["\(BoxNine[y])"] != 0{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
-
 }
+
+//checking the entire board
 func boardCheck(){
     var theNumbers = [0]
+    //numbers coresponds with boxed (81 for 81 boxes)
     for _ in 1...81{
         var x : Int
         repeat{
@@ -264,9 +241,9 @@ func boardCheck(){
         checkVer(x:x)
         checkBox(x:x)
     }
-
 }
-//boardCheck()
+
+//prints completed board
 func printOut() -> String{
     var printingBoard : String = ""
     for x in 1 ... 81{
@@ -285,7 +262,6 @@ func printOut() -> String{
     return printingBoard
 }
 
-//printOut()
 func solvedCheck() -> Bool{
     var cellNumberCheck = 1
     var unfilled = 0
@@ -343,8 +319,8 @@ func solvedCheck() -> Bool{
     fatalError("damn")
     return false
 }
-//solvedCheck()
-//printOut()
+
+//change difficulty settings
 func difficultySetting(difficulty:String){
     var clearedCells : [Int] = []
     switch difficulty{
@@ -357,6 +333,7 @@ func difficultySetting(difficulty:String){
             clearedCells.append(x)
             Cells["\(x)"] = 0
         }
+        
     case "Medium":
         for _ in 1 ... 32{
             var x = 0
@@ -366,6 +343,7 @@ func difficultySetting(difficulty:String){
             clearedCells.append(x)
             Cells["\(x)"] = 0
         }
+        
     case "Hard":
         for _ in 1 ... 55{
             var x = 0
@@ -375,12 +353,11 @@ func difficultySetting(difficulty:String){
             clearedCells.append(x)
             Cells["\(x)"] = 0
         }
+        
     default:
         fatalError("Not correct difficulty")
     }
 }
-
-
 
 func makeBoard() -> String{
     for x in 1 ... 81{
