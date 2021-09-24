@@ -1,6 +1,7 @@
 import Foundation
 import Vapor
 
+//used to hold the number associated with each cell of the sudoku board
 var Cells = Dictionary<String, Int>()
 
 func checkHor(x : Int){
@@ -17,11 +18,9 @@ func checkHor(x : Int){
             }else if x <= 9 {
                 checking = 1
                 plus = true
-                //print("at 9")
             }else if x <= 18{
                 checking = 10
                 plus = true
-                //print("at 18")
             }else if x <= 27{
                 checking = 19
                 plus = true
