@@ -1,14 +1,12 @@
 import Foundation
 import Vapor
 
-//used to hold the number associated with each cell of the sudoku board
 var Cells = Dictionary<String, Int>()
 
 func checkHor(x : Int){
     var checking = 1
     var plus = false
     var currentCheck = Cells["\(x)"]
-    //checking = x
     plus = false
     for y in 1 ... 8{
         if y == 1{
@@ -44,8 +42,8 @@ func checkHor(x : Int){
                 plus = true
             }
         }
+
         if currentCheck == Cells["\(checking)"] && Cells["\(x)"] != 0{
-            
             Cells["\(x)"] = 0
             plus = false
         }
@@ -53,13 +51,15 @@ func checkHor(x : Int){
             checking += 2
         }else if plus{
             checking += 1
-         }
+        }
     }
 }
+
 
 func checkVer(x : Int){
     var checking = 1
     var plus = false
+
     var currentCheck = Cells["\(x)"]
     plus = true
     for y in 1 ... 8{
@@ -95,12 +95,13 @@ func checkVer(x : Int){
                 checking = 9
                 plus = true
             }
+
         }
         if currentCheck == Cells["\(checking)"] && Cells["\(x)"] != 0{
-            
             Cells["\(x)"] = 0
             plus = false
         }
+        
         if checking + 9 == x{
             checking += 18
         }else if plus{
@@ -108,8 +109,6 @@ func checkVer(x : Int){
         }
     }
 }
-
-//creates an array of 9 numbers for each inidividual box 
 
 let BoxOne = [1,2,3,10,11,12,19,20,21]
 let BoxTwo = [4,5,6,13,14,15,22,23,24]
@@ -121,8 +120,6 @@ let BoxSeven = [55,56,57,64,65,66,73,74,75]
 let BoxEight = [58,59,60,67,68,69,76,77,78]
 let BoxNine = [61,62,63,70,71,72,79,80,81]
 
-//checking contents of each individual box
-
 func checkBox(x : Int){
     let currentCheck = Cells["\(x)"]
     if BoxOne.contains(x){
@@ -130,6 +127,7 @@ func checkBox(x : Int){
             if BoxOne[y] != x{
                 if Cells["\(BoxOne[y])"] == currentCheck && Cells["\(BoxOne[y])"] != 0{
                     Cells["\(x)"] = 0
+                    //print("BoxOne cell \(x)")
                 }
             }
         }
@@ -230,13 +228,12 @@ func boardCheck(){
     }
 }
 
-//prints completed board
 func printOut() -> String{
     var printingBoard : String = ""
     for x in 1 ... 81{
         switch Cells["\(x)"]{
         case 0:
-              printingBoard += "-  "
+            printingBoard += "-  "
         default:
             printingBoard += "\(Cells["\(x)"]!)  "
         }
@@ -254,9 +251,7 @@ func solvedCheck() -> Bool{
     var possibleNumbers : [Int] = []
     var fail = 0
     var done = false
-
     repeat{
-        
         if Cells["\(cellNumberCheck)"] == 0{
             unfilled = cellNumberCheck
         }else{
@@ -267,32 +262,29 @@ func solvedCheck() -> Bool{
         }
 
     }while unfilled == 0
-
     for _ in 0...8{
-        
+        //print("on for loop")
         var y = Int.random(in:0 ..< numberCheck.count)
         Cells["\(unfilled)"] = numberCheck[y]
         checkHor(x:unfilled)
         checkVer(x:unfilled)
         checkBox(x:unfilled)
+
         if Cells["\(unfilled)"] == 0{
             numberCheck.remove(at:y)
         }else{
             possibleNumbers.append(numberCheck[y])
             numberCheck.remove(at:y)
-            
+            //print(possibleNumbers)
         }
     }
-
     repeat{
-        
         if possibleNumbers.count == 0{
             Cells["\(unfilled)"] = 0
             return false
         }
         var y = Int.random(in:0 ..< possibleNumbers.count)
         Cells["\(unfilled)"] = possibleNumbers[y]
-        
         var ohBoy = solvedCheck()
         if ohBoy{
             return true
@@ -349,28 +341,6 @@ func makeBoard() -> String{
     return "\(printOut())"
 }
 
-
-///////////////////////////////////////////////////// This func gives each box a specific index from 0...8 and gives each cell a id 0...8 based of the box called. I used a seperator becuase I could not find the original board before making it a string. Will change once we cleanup code. 
-func alterCell(boardString: String, num: Int, boxIndex: Int, cellIndex: Int) -> String {
-    var rows = boardString.split(separator: "\n").map{String($0)}
-    for offset in 0..<rows.count {
-        var row = rows[offset]
-        var boxOffset = (offset / 3) * 3
-        var cellOffset = (offset * 3) % 9
-        var cells = row.split(separator: " ").map{String($0)}
-        for i in 0..<cells.count {
-            var cell = cells[i]
-            var cellNum = (i % 3) + cellOffset
-            var boxNum = (i / 3) + boxOffset
-            if (boxNum == boxIndex && cellNum == cellIndex) {
-                cells[i] = String(num)
-            }
-        }
-        rows[offset] = cells.joined(separator: " ")   
-    }
-    return rows.joined(separator: "\n")
-}
-
-struct sudokuBoard {
-    var boardString : String
+struct sudokuBoard: Content {
+    var boardString : [String] = [makeBoard()]
 }

@@ -15,8 +15,7 @@ func routes(_ app: Application) throws {
     app.get("hello") { req -> String in
         return "Hello, world!"
     }
-
-
+    
     ////////////////////////////////////////////////////////// creates a sudoku board and creates an id to associate with the board
     app.post("games") {req -> [String:String] in
         let partialBoard = sudokuBoard(boardString: makeBoard())
@@ -50,3 +49,5 @@ func routes(_ app: Application) throws {
         return alterCell(boardString: partialBoard.boardString, num: num, boxIndex: boxIndex, cellIndex: cellIndex)
     }
 }
+
+

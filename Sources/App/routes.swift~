@@ -1,0 +1,42 @@
+import Vapor
+
+func routes(_ app: Application) throws {
+    app.get { req in
+        return "It works!"
+    }
+    
+    app.get("hello") { req -> String in
+        return "Hello, world!"
+    }
+
+    app.get("games",":id","cells") { req -> String in
+        return "haha ur so smart"
+    }
+    
+    app.get("games") { req -> String in
+
+        return "Hello!"
+
+    }
+
+}
+
+
+/*
+POST /games
+  * Action: Creates a new game and associated board
+  * Payload: None
+  * Response: Id uniquely identifying a game
+  * Status code: 201 Created
+GET /games/<id>/cells
+              * Action: None
+              * Payload: None
+              * Response: cells
+              * Status code: 200 OK
+PUT /games/<id>/cells/<boxIndex>/<cellIndex>
+* Action: Place specified value at in game at boxIndex, cellIndex
+* Payload: value (null for removing value)
+ Response: Nothing
+ Status: 204 No Content
+                                                                                   */
+ 
