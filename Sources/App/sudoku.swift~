@@ -3,12 +3,10 @@ import Vapor
 
 var Cells = Dictionary<String, Int>()
 
-
 func checkHor(x : Int){
     var checking = 1
     var plus = false
     var currentCheck = Cells["\(x)"]
-    //checking = x
     plus = false
     for y in 1 ... 8{
         if y == 1{
@@ -45,21 +43,18 @@ func checkHor(x : Int){
                 checking = 73
                 plus = true
             }
-
         }
 
         if currentCheck == Cells["\(checking)"] && Cells["\(x)"] != 0{
             //print("\(x) is now 0 due to \(checking) HOR")
             Cells["\(x)"] = 0
             plus = false
-
         }
         if checking + 1 == x{
             checking += 2
         }else if plus{
             checking += 1
         }
-        //print(checking)
     }
 }
 
@@ -110,11 +105,9 @@ func checkVer(x : Int){
             }else if (x-9)%9 == 0{
                 checking = 9
                 plus = true
-
             }
 
         }
-
         if currentCheck == Cells["\(checking)"] && Cells["\(x)"] != 0{
             //print("\(x) is now 0 due to \(checking)")
             Cells["\(x)"] = 0
@@ -126,7 +119,6 @@ func checkVer(x : Int){
         }else if plus{
             checking += 9
         }
-        //print(checking)
     }
 }
 
@@ -150,109 +142,90 @@ func checkBox(x : Int){
                     //print("BoxOne cell \(x)")
                 }
             }
-
         }
-
     }
+    
     if BoxTwo.contains(x){
         for y in 0 ..< BoxTwo.count{
             if BoxTwo[y] != x{
                 if Cells["\(BoxTwo[y])"] == currentCheck && Cells["\(BoxOne[y])"] != 0{
                     Cells["\(x)"] = 0
-                    //print("BoxTwo cell \(x)")
-
                 }
             }
-
         }
-
     }
+    
     if BoxThree.contains(x){
         for y in 0 ..< BoxThree.count{
             if BoxThree[y] != x{
                 if Cells["\(BoxThree[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
+    
     if BoxFour.contains(x){
         for y in 0 ..< BoxFour.count{
             if BoxFour[y] != x{
                 if Cells["\(BoxFour[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
+    
     if BoxFive.contains(x){
         for y in 0 ..< BoxFive.count{
             if BoxFive[y] != x{
                 if Cells["\(BoxFive[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
+    
     if BoxSix.contains(x){
         for y in 0 ..< BoxSix.count{
             if BoxSix[y] != x{
                 if Cells["\(BoxSix[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
+    
     if BoxSeven.contains(x){
         for y in 0 ..< BoxSeven.count{
             if BoxSeven[y] != x{
                 if Cells["\(BoxSeven[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
+    
     if BoxEight.contains(x){
         for y in 0 ..< BoxEight.count{
             if BoxEight[y] != x{
                 if Cells["\(BoxEight[y])"] == currentCheck{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
+    
     if BoxNine.contains(x){
         for y in 0 ..< BoxNine.count{
             if BoxNine[y] != x{
                 if Cells["\(BoxNine[y])"] == currentCheck && Cells["\(BoxNine[y])"] != 0{
                     Cells["\(x)"] = 0
-
                 }
             }
-
         }
-
     }
-
 }
+
 func boardCheck(){
     var theNumbers = [0]
     for _ in 1...81{
@@ -265,9 +238,8 @@ func boardCheck(){
         checkVer(x:x)
         checkBox(x:x)
     }
-
 }
-//boardCheck()
+
 func printOut() -> String{
     var printingBoard : String = ""
     for x in 1 ... 81{
@@ -286,7 +258,6 @@ func printOut() -> String{
     return printingBoard
 }
 
-//printOut()
 func solvedCheck() -> Bool{
     var cellNumberCheck = 1
     var unfilled = 0
@@ -295,19 +266,16 @@ func solvedCheck() -> Bool{
     var fail = 0
     var done = false
     repeat{
-        //print("on check")
         if Cells["\(cellNumberCheck)"] == 0{
             unfilled = cellNumberCheck
         }else{
             cellNumberCheck += 1
         }
-
         if cellNumberCheck > 81{
             return true
         }
 
     }while unfilled == 0
-
     for _ in 0...8{
         //print("on for loop")
         var y = Int.random(in:0 ..< numberCheck.count)
@@ -344,8 +312,7 @@ func solvedCheck() -> Bool{
     fatalError("damn")
     return false
 }
-//solvedCheck()
-//printOut()
+
 func difficultySetting(difficulty:String){
     var clearedCells : [Int] = []
     switch difficulty{
@@ -381,8 +348,6 @@ func difficultySetting(difficulty:String){
     }
 }
 
-
-
 func makeBoard() -> String{
     for x in 1 ... 81{
         Cells["\(x)"] = 0
@@ -391,7 +356,6 @@ func makeBoard() -> String{
     difficultySetting(difficulty:"Medium")
     return "\(printOut())"
 }
-
 
 struct sudokuBoard: Content {
     var boardString : [String] = [makeBoard()]
