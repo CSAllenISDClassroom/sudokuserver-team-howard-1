@@ -392,6 +392,5 @@ func alterCell(boardString: String, num: Int, boxIndex: Int, cellIndex: Int) -> 
 }
 
 struct sudokuBoard {
-   
     var boardString : String 
 }
