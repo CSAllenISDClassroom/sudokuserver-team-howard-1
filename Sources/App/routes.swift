@@ -1,31 +1,52 @@
 import Vapor
-
-let encoder = JSONEncoder()
-
+///////////////////
+/*func create(req: Request) throws -> HTTPStatus {
+      let background = try req.content.decode(Background.self)
+          print(background)
+              return HTTPStatus.ok
+              } */
+//////////////////
 func routes(_ app: Application) throws {
-    
+    var runningGames = [Int: sudokuBoard] ()
+
     app.get { req in
         return "It works!"
     }
-
     app.get("hello") { req -> String in
         return "Hello, world!"
     }
 
-    app.post("games") { req -> Response in
+
+    ////////////////////////////////////////////////////////// creates a sudoku board and creates an id to associate with the board
+    app.post("games") {req -> [String:String] in
+        let partialBoard = sudokuBoard(boardString: makeBoard())
+        let gameID = GameID.createID(runningGames:runningGames)
+        runningGames[gameID] = partialBoard
+
+        return ["id": String(gameID)]
+    }
+
+    ////////////////////////////////////////////////////////// displays the board on the screen givent the boardid number
+    app.get("games",":id","cells") { req -> String in
         
-        let newBoard = try req.content.decode(SudokuBoard.self)
-        newBoard.id = newBoard.boardID
-        newBoard.boardID += 1
-        newBoard.makeTheThing()
-        let yippee = newBoard.printOut()
-        let hope = THEBoard(id: newBoard.id, board: yippee)
-        // return ["Board ID" : String(newBoard.id)]
-        encoder.outputFormatting = .prettyPrinted
-        let data = try encoder.encode(hope.id)
-        let body = Response.Body(string: String(data: data, encoding: .utf8)!)
-        let response = Response(status: .ok,body: body)
+        let id = Int(req.parameters.get("id")!)!
+        let partialBoard = runningGames[id]!
+        let response = partialBoard.boardString
+
         return response
+    }
+    
+    ///////////////////////////////////////////////// given specific board id box and cell allows you to change the value inside of the box
+    app.put("games",":id","cells",":boxIndex",":cellIndex") { req -> String in
+
+        let id = Int(req.parameters.get("id")!)!
+        let boxIndex = Int(req.parameters.get("boxIndex")!)!
+        let cellIndex = Int(req.parameters.get("cellIndex")!)!
+        let partialBoard = runningGames[id]!
+        let num = Int(req.body.string!)!
         
+        runningGames[id] = sudokuBoard(boardString: alterCell(boardString: partialBoard.boardString, num: num, boxIndex: boxIndex, cellIndex: cellIndex))
+
+        return alterCell(boardString: partialBoard.boardString, num: num, boxIndex: boxIndex, cellIndex: cellIndex)
     }
 }
