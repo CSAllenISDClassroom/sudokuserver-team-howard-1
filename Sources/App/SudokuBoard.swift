@@ -1,4 +1,5 @@
-/*import Foundation
+/*
+import Foundation
 import Vapor
 
 var Cells = Dictionary<String, Int>()
@@ -395,7 +396,6 @@ func difficultySetting(difficulty:String){
 }
 
 
-
 func makeBoard() -> String{
     for x in 1 ... 81{
         Cells["\(x)"] = 0
@@ -405,11 +405,65 @@ func makeBoard() -> String{
     return "\(printOut())"
 }
 
+func alterCell(boardString: String, num: Int, boxIndex: Int, cellIndex: Int) -> String {
+    var rows = boardString.split(separator: "\n").map{String($0)}
+    for offset in 0..<rows.count {
+        var row = rows[offset]
+        var boxOffset = (offset / 3) * 3
+        var cellOffset = (offset * 3) % 9
+        var cells = row.split(separator: " ").map{String($0)}
+        for i in 0..<cells.count {
+            var cell = cells[i]
+            var cellNum = (i % 3) + cellOffset
+            var boxNum = (i / 3) + boxOffset
+            if (boxNum == boxIndex && cellNum == cellIndex) {
+                cells[i] = String(num)
+            }
+        }
+        rows[offset] = cells.joined(separator: " ")
+    }
 
-struct sudokuBoard: Content {
+    return rows.joined(separator: "\n")
+}
+    
+
+final class SudokuBoard: Content {
+
+    var SuperCells = Dictionary< Int, Int>()
+
+    func makeTheThing(){
+        for x in 1 ... 81{
+            SuperCells[x] = Cells["\(x)"]
+        }
+    }
+
+    func printOut() -> String{
+        var printingBoard : String = ""
+        for x in 1 ... 81{
+            switch SuperCells[x]{
+            case 0:
+                //print("-", terminator: "  ")
+                printingBoard += "-  "
+            default:
+                //print(Cells["\(x)"]!, terminator: "  ")
+                printingBoard += "\(SuperCells[x]!)  "
+            }
+            if x % 9 == 0{
+                printingBoard += "\n"
+            }
+        }
+        return printingBoard
+    }
+    var boardID : Int = 1
     var id : Int
     var board : String
-    var hooplah : [String] = [makeBoard()]
     
 }
-*/
+
+struct THEBoard : Content {
+    
+    var id : Int
+    var board : String
+    
+}
+ */

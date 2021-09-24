@@ -6,15 +6,20 @@ import Vapor
     print(background)
     return HTTPStatus.ok
     } */      
-//////////////////
 
+///////////////////
+/*func create(req: Request) throws -> HTTPStatus {
+      let background = try req.content.decode(Background.self)
+          print(background)
+              return HTTPStatus.ok
+              } */
+//////////////////
 func routes(_ app: Application) throws {
     var runningGames = [Int: sudokuBoard] ()
-    
+
     app.get { req in
         return "It works!"
     }
-
     app.get("hello") { req -> String in
         return "Hello, world!"
     }
@@ -26,7 +31,7 @@ func routes(_ app: Application) throws {
         runningGames[gameID] = partialBoard        
         return ["id": String(gameID)]        
     }
-    
+
     ////////////////////////////////////////////////////////// displays the board on the screen givent the boardid number
     app.get("games",":id","cells") { req -> String in
         guard let id = req.parameters.get("id", as: Int.self) else {
@@ -35,6 +40,7 @@ func routes(_ app: Application) throws {
         //        let id = Int(req.parameters.get("id")!)!
         let partialBoard = runningGames[id]!
         let response = partialBoard.boardString
+
         return response
     }
     
@@ -57,6 +63,7 @@ func routes(_ app: Application) throws {
          runningGames[id] = sudokuBoard(boardString: alterCell(boardString: partialBoard.boardString, num: num, boxIndex: boxIndex, cellIndex: cellIndex))
          return alterCell(boardString: partialBoard.boardString, num: num, boxIndex: boxIndex, cellIndex: cellIndex)
     }     
+
 }
 
 
