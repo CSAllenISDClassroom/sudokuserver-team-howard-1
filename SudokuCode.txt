@@ -75,14 +75,12 @@ func checkHor(x : Int){
         }
     }
 
-
 func checkVer(x : Int){
     //var currentCheck = 0
     var checking = 1
     var plus = false
     //var BlankCheckVer = [0]
     //var x : Int
-    
         //print(x)
         var currentCheck = Cells["\(x)"]
         //checking = x
@@ -122,16 +120,13 @@ func checkVer(x : Int){
                 }else if (x-9)%9 == 0{
                     checking = 9
                     plus = true
-
-                }
-                
+                } 
             }
                 
             if currentCheck == Cells["\(checking)"] && Cells["\(x)"] != 0{
                 //print("\(x) is now 0 due to \(checking)")
                 Cells["\(x)"] = 0
                 plus = false
-
             }
             if checking + 9 == x{
                         checking += 18
@@ -155,7 +150,6 @@ let BoxNine = [61,62,63,70,71,72,79,80,81]
 func checkBox(x : Int){
     //var BlankCheckBox = [0]
     //var x : Int
-    
         //print(x)
         let currentCheck = Cells["\(x)"]
         if BoxOne.contains(x){
@@ -166,9 +160,7 @@ func checkBox(x : Int){
                         //print("BoxOne cell \(x)")
                     }
                 }
-                
             }
-            
         }
         if BoxTwo.contains(x){
             for y in 0 ..< BoxTwo.count{
@@ -178,97 +170,78 @@ func checkBox(x : Int){
                         //print("BoxTwo cell \(x)")
                         
                     }
-                }
-                
+                } 
             }
-            
         }
         if BoxThree.contains(x){
             for y in 0 ..< BoxThree.count{
                 if BoxThree[y] != x{
                     if Cells["\(BoxThree[y])"] == currentCheck{
-                        Cells["\(x)"] = 0
-                        
+                        Cells["\(x)"] = 0 
                     }
                 }
-                
             }
-            
         }
         if BoxFour.contains(x){
             for y in 0 ..< BoxFour.count{
                 if BoxFour[y] != x{
                     if Cells["\(BoxFour[y])"] == currentCheck{
                         Cells["\(x)"] = 0
-                        
                     }
                 }
-                
             }
-            
         }
+        
         if BoxFive.contains(x){
             for y in 0 ..< BoxFive.count{
                 if BoxFive[y] != x{
                     if Cells["\(BoxFive[y])"] == currentCheck{
                         Cells["\(x)"] = 0
-                        
                     }
                 }
-                
             }
-            
         }
+        
         if BoxSix.contains(x){
             for y in 0 ..< BoxSix.count{
                 if BoxSix[y] != x{
                     if Cells["\(BoxSix[y])"] == currentCheck{
                         Cells["\(x)"] = 0
-                        
                     }
                 }
-                
             }
-            
         }
+        
         if BoxSeven.contains(x){
             for y in 0 ..< BoxSeven.count{
                 if BoxSeven[y] != x{
                     if Cells["\(BoxSeven[y])"] == currentCheck{
                         Cells["\(x)"] = 0
-                        
                     }
                 }
-                
             }
-            
         }
+        
         if BoxEight.contains(x){
             for y in 0 ..< BoxEight.count{
                 if BoxEight[y] != x{
                     if Cells["\(BoxEight[y])"] == currentCheck{
                         Cells["\(x)"] = 0
-                        
                     }
                 }
-                
             }
-            
         }
         if BoxNine.contains(x){
             for y in 0 ..< BoxNine.count{
                 if BoxNine[y] != x{
                     if Cells["\(BoxNine[y])"] == currentCheck && Cells["\(BoxNine[y])"] != 0{
                         Cells["\(x)"] = 0
-                        
                     }
                 }
-                
             }
-            
         }
-        
 }
+
 func boardCheck(){
     var theNumbers = [0]
     for _ in 1...81{
