@@ -46,13 +46,9 @@ func routes(_ app: Application) throws {
     
     ///////////////////////////////////////////////// given specific board id box and cell allows you to change the value inside of the box
     app.put("games",":id","cells",":boxIndex",":cellIndex") { req -> String in
-        guard let id = req.parameters.get("id", as: Int.self) else {
-            throw Abort(.badRequest)
-        }
-        guard let boxIndex = req.parameters.get("boxIndex", as: Int.self) else {
-            throw Abort(.badRequest)
-        }
-        guard let cellIndex = req.parameters.get("cellIndex", as: Int.self) else {
+        guard let id = req.parameters.get("id", as: Int.self),
+              let boxIndex = req.parameters.get("boxIndex", as: Int.self),
+              let cellIndex = req.parameters.get("cellIndex", as: Int.self) else {
             throw Abort(.badRequest)
         }
         // let id = Int(req.parameters.get("id")!)!
