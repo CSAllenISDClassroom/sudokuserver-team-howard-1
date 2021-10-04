@@ -7,7 +7,7 @@ var Cells = Dictionary<String, Int>()
 func checkHor(x : Int){
     var checking = 1
     var plus = false
-    var currentCheck = Cells["\(x)"]
+    let currentCheck = Cells["\(x)"]
     //checking = x
     plus = false
     for y in 1 ... 8{
@@ -60,7 +60,7 @@ func checkHor(x : Int){
 func checkVer(x : Int){
     var checking = 1
     var plus = false
-    var currentCheck = Cells["\(x)"]
+    let currentCheck = Cells["\(x)"]
     plus = true
     for y in 1 ... 8{
         if y == 1{
@@ -253,7 +253,7 @@ func solvedCheck() -> Bool{
     var numberCheck = [1,2,3,4,5,6,7,8,9]
     var possibleNumbers : [Int] = []
     var fail = 0
-    var done = false
+    //var done = false
 
     repeat{
         
@@ -270,7 +270,7 @@ func solvedCheck() -> Bool{
 
     for _ in 0...8{
         
-        var y = Int.random(in:0 ..< numberCheck.count)
+        let y = Int.random(in:0 ..< numberCheck.count)
         Cells["\(unfilled)"] = numberCheck[y]
         checkHor(x:unfilled)
         checkVer(x:unfilled)
@@ -290,10 +290,10 @@ func solvedCheck() -> Bool{
             Cells["\(unfilled)"] = 0
             return false
         }
-        var y = Int.random(in:0 ..< possibleNumbers.count)
+        let y = Int.random(in:0 ..< possibleNumbers.count)
         Cells["\(unfilled)"] = possibleNumbers[y]
         
-        var ohBoy = solvedCheck()
+        let ohBoy = solvedCheck()
         if ohBoy{
             return true
         }else{
@@ -302,7 +302,7 @@ func solvedCheck() -> Bool{
         fail += 1
     }while fail < 80000000
     fatalError("damn")
-    return false
+    //return false
 }
 
 func difficultySetting(difficulty:String){
@@ -344,9 +344,10 @@ func makeBoard() -> String{
     for x in 1 ... 81{
         Cells["\(x)"] = 0
     }
-    solvedCheck()
-    difficultySetting(difficulty:"Medium")
-    return "\(printOut())"
+    if solvedCheck(){
+        difficultySetting(difficulty:"Medium")
+    }
+        return "\(printOut())"
 }
 
 
@@ -354,14 +355,14 @@ func makeBoard() -> String{
 func alterCell(boardString: String, num: Int, boxIndex: Int, cellIndex: Int) -> String {
     var rows = boardString.split(separator: "\n").map{String($0)}
     for offset in 0..<rows.count {
-        var row = rows[offset]
-        var boxOffset = (offset / 3) * 3
-        var cellOffset = (offset * 3) % 9
+        let row = rows[offset]
+        let boxOffset = (offset / 3) * 3
+        let cellOffset = (offset * 3) % 9
         var cells = row.split(separator: " ").map{String($0)}
         for i in 0..<cells.count {
-            var cell = cells[i]
-            var cellNum = (i % 3) + cellOffset
-            var boxNum = (i / 3) + boxOffset
+            //let cell = cells[i]
+            let cellNum = (i % 3) + cellOffset
+            let boxNum = (i / 3) + boxOffset
             if (boxNum == boxIndex && cellNum == cellIndex) {
                 cells[i] = String(num)
             }
