@@ -1,4 +1,12 @@
 import Vapor
+
+///////////////////
+/*func create(req: Request) throws -> HTTPStatus {
+    let background = try req.content.decode(Background.self)
+    print(background)
+    return HTTPStatus.ok
+    } */      
+
 ///////////////////
 /*func create(req: Request) throws -> HTTPStatus {
       let background = try req.content.decode(Background.self)
@@ -20,19 +28,16 @@ func routes(_ app: Application) throws {
     app.post("games") {req -> [String:String] in
         let partialBoard = sudokuBoard(boardString: makeBoard())
         let gameID = GameID.createID(runningGames:runningGames)
-        runningGames[gameID] = partialBoard
-
-        return ["id": String(gameID)]
+        runningGames[gameID] = partialBoard        
+        return ["id": String(gameID)]        
     }
 
     ////////////////////////////////////////////////////////// displays the board on the screen givent the boardid number
     app.get("games",":id","cells") { req -> String in
-        
-        //let id = Int(req.parameters.get("id")!)!
-        guard let id = req.parameters.get("id", as: Int.self) else{
+        guard let id = req.parameters.get("id", as: Int.self) else {
             throw Abort(.badRequest)
         }
-        
+        //        let id = Int(req.parameters.get("id")!)!
         let partialBoard = runningGames[id]!
         let response = partialBoard.boardString
 
@@ -41,6 +46,19 @@ func routes(_ app: Application) throws {
     
     ///////////////////////////////////////////////// given specific board id box and cell allows you to change the value inside of the box
     app.put("games",":id","cells",":boxIndex",":cellIndex") { req -> String in
+        guard let id = req.parameters.get("id", as: Int.self),
+              let boxIndex = req.parameters.get("boxIndex", as: Int.self),
+              let cellIndex = req.parameters.get("cellIndex", as: Int.self) else {
+            throw Abort(.badRequest)
+        }
+        // let id = Int(req.parameters.get("id")!)!
+        // let boxIndex = Int(req.parameters.get("boxIndex")!)!
+        // let cellIndex = Int(req.parameters.get("cellIndex")!)!
+         let partialBoard = runningGames[id]!
+         let num = Int(req.body.string!)!
+         runningGames[id] = sudokuBoard(boardString: alterCell(boardString: partialBoard.boardString, num: num, boxIndex: boxIndex, cellIndex: cellIndex))
+         return alterCell(boardString: partialBoard.boardString, num: num, boxIndex: boxIndex, cellIndex: cellIndex)
+    }     
 
         guard let id = req.parameters.get("id", as: Int.self) else{
             throw Abort(.badRequest)

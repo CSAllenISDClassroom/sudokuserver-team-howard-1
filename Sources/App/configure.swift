@@ -24,5 +24,6 @@ public func configure(_ app: Application) throws {
     }
     app.http.server.configuration.hostname = hostname
  // register routes
+
     try routes(app)
 }
