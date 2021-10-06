@@ -28,7 +28,11 @@ func routes(_ app: Application) throws {
     ////////////////////////////////////////////////////////// displays the board on the screen givent the boardid number
     app.get("games",":id","cells") { req -> String in
         
-        let id = Int(req.parameters.get("id")!)!
+        //let id = Int(req.parameters.get("id")!)!
+        guard let id = req.parameters.get("id", as: Int.self) else{
+            throw Abort(.badRequest)
+        }
+        
         let partialBoard = runningGames[id]!
         let response = partialBoard.boardString
 
@@ -38,9 +42,19 @@ func routes(_ app: Application) throws {
     ///////////////////////////////////////////////// given specific board id box and cell allows you to change the value inside of the box
     app.put("games",":id","cells",":boxIndex",":cellIndex") { req -> String in
 
-        let id = Int(req.parameters.get("id")!)!
-        let boxIndex = Int(req.parameters.get("boxIndex")!)!
-        let cellIndex = Int(req.parameters.get("cellIndex")!)!
+        guard let id = req.parameters.get("id", as: Int.self) else{
+            throw Abort(.badRequest)
+        }
+        guard let boxIndex = req.parameters.get("boxIndex", as: Int.self) else{
+            throw Abort(.badRequest)
+        }
+        guard let cellIndex = req.parameters.get("cellIndex", as: Int.self) else{
+            throw Abort(.badRequest)
+        }
+        
+        //let id = Int(req.parameters.get("id")!)!
+        //let boxIndex = Int(req.parameters.get("boxIndex")!)!
+        //let cellIndex = Int(req.parameters.get("cellIndex")!)!
         let partialBoard = runningGames[id]!
         let num = Int(req.body.string!)!
         
