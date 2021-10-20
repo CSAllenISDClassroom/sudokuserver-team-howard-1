@@ -104,7 +104,8 @@ func routes(_ app: Application) throws {
     //testing out printing in the way Mr.Ben wants because he is the ultimate ruller and dictates how and why things are made
     app.get("games",":id","cells", "json") { req -> Board in
         guard let id = req.parameters.get("id", as: Int.self) else {
-            throw Abort(.badRequest)
+            return "id is invalid"
+           // throw Abort(.badRequest)
         }
         //let id = Int(req.parameters.get("id")!)!
         let partialBoard = runningGames[id]!

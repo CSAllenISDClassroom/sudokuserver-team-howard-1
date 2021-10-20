@@ -4,6 +4,10 @@ import Vapor
 //used to hold the number associated with each cell of the sudoku board
 var Cells = Dictionary<String, Int>()
 
+//////////////////////////////////////////////////////////////////
+// Verifies if a given row is viable for use in a game of Sudoku//
+//////////////////////////////////////////////////////////////////
+
 func checkHor(x : Int){
     var checking = 1
     var plus = false
@@ -57,6 +61,7 @@ func checkHor(x : Int){
     }
 }
 
+// Verifies if a given column is viable for use in a game of Sudoku
 func checkVer(x : Int){
     var checking = 1
     var plus = false
@@ -121,7 +126,7 @@ let BoxSeven = [55,56,57,64,65,66,73,74,75]
 let BoxEight = [58,59,60,67,68,69,76,77,78]
 let BoxNine = [61,62,63,70,71,72,79,80,81]
 
-//checking contents of each individual box
+//checks contents of each individual box
 
 func checkBox(x : Int){
     let currentCheck = Cells["\(x)"]
@@ -216,6 +221,7 @@ func checkBox(x : Int){
     }
 }
 
+
 func boardCheck(){
     var theNumbers = [0]
     for _ in 1...81{
@@ -230,7 +236,10 @@ func boardCheck(){
     }
 }
 
-//prints completed board
+////////////////////////////
+//prints a completed board//
+////////////////////////////
+
 func printOut() -> String{
     var printingBoard : String = ""
     for x in 1 ... 81{
@@ -246,6 +255,11 @@ func printOut() -> String{
     }
     return printingBoard
 }
+
+
+/////////////////////////////////////////
+// Checks to see if the board is solved//
+/////////////////////////////////////////
 
 func solvedCheck() -> Bool{
     var cellNumberCheck = 1
@@ -301,9 +315,13 @@ func solvedCheck() -> Bool{
         }
         fail += 1
     }while fail < 80000000
-    fatalError("damn")
+    fatalError("Damn, board isn't solved")
     //return false
 }
+
+////////////////////////////////////////////////////////
+// Outlines parameters for various difficulty settings//
+////////////////////////////////////////////////////////
 
 func difficultySetting(difficulty:String){
     var clearedCells : [Int] = []
