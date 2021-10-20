@@ -308,7 +308,7 @@ func solvedCheck() -> Bool{
 func difficultySetting(difficulty:String){
     var clearedCells : [Int] = []
     switch difficulty{
-    case "Easy":
+    case "easy":
         for _ in 1 ... 12{
             var x = 0
             repeat{
@@ -317,7 +317,7 @@ func difficultySetting(difficulty:String){
             clearedCells.append(x)
             Cells["\(x)"] = 0
         }
-    case "Medium":
+    case "medium":
         for _ in 1 ... 32{
             var x = 0
             repeat{
@@ -326,8 +326,17 @@ func difficultySetting(difficulty:String){
             clearedCells.append(x)
             Cells["\(x)"] = 0
         }
-    case "Hard":
+    case "hard":
         for _ in 1 ... 55{
+            var x = 0
+            repeat{
+                x = Int.random(in:1...81)
+            }while clearedCells.contains(x)
+            clearedCells.append(x)
+            Cells["\(x)"] = 0
+        }
+    case "hell":
+        for _ in 1 ... 70{
             var x = 0
             repeat{
                 x = Int.random(in:1...81)
@@ -340,12 +349,12 @@ func difficultySetting(difficulty:String){
     }
 }
 
-func makeBoard() -> String{
+func makeBoard(difficulty:String) -> String{
     for x in 1 ... 81{
         Cells["\(x)"] = 0
     }
     if solvedCheck(){
-        difficultySetting(difficulty:"Medium")
+        difficultySetting(difficulty:difficulty)
     }
         return "\(printOut())"
 }
