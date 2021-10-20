@@ -7,8 +7,8 @@ import Vapor
     return HTTPStatus.ok
     } */      
 
-///////////////////
 
+////////////////////////////////////////////////////////// Outlines operations of various HTTPS requests sent to server
 func routes(_ app: Application) throws {
     var runningGames = [Int: sudokuBoard] ()
 
@@ -45,7 +45,7 @@ func routes(_ app: Application) throws {
               let boxIndex = req.parameters.get("boxIndex", as: Int.self),
               let cellIndex = req.parameters.get("cellIndex", as: Int.self) else {
             //throw Abort(.badRequest)
-            return "either id is inccorrect or boxIndex or cellIndex is out of range"
+            return "either id is incorrect or boxIndex or cellIndex is out of range"
         }
         let partialBoard = runningGames[id]!
         let num = Int(req.body.string!)!
