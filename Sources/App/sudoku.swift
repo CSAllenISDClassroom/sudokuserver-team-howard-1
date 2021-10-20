@@ -360,6 +360,14 @@ func makeBoard(difficulty:String) -> String{
 }
 
 
+//New shit
+
+
+
+
+
+//End
+
 ///////////////////////////////////////////////////// This func gives each box a specific index from 0...8 and gives each cell a id 0...8 based of the box called. I used a seperator becuase I could not find the original board before making it a string. Will change once we cleanup code. 
 func alterCell(boardString: String, num: Int, boxIndex: Int, cellIndex: Int) -> String {
     var rows = boardString.split(separator: "\n").map{String($0)}
