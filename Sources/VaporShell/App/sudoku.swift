@@ -367,24 +367,26 @@ func difficultySetting(difficulty:String){
     }
 }
 
-func makeBoard(difficulty:String) -> String{
-    for x in 1 ... 81{
-        Cells["\(x)"] = 0
-    }
-    if solvedCheck(){
-        difficultySetting(difficulty:difficulty)
-    }
-        return "\(printOut())"
+//var doesThisWork : String = ""
+
+struct sudokuBoard {
+    var boardString : String
+    var origin : String
 }
 
 
-//New shit
+func makeBoard(difficulty:String) -> sudokuBoard{
+    for x in 1 ... 81{
+        Cells["\(x)"] = 0
+    }
+    var doesThisWork = ""
+    if solvedCheck(){
+        doesThisWork = "\(printOut())"
+        difficultySetting(difficulty:difficulty)
+    }
+    return sudokuBoard(boardString: "\(printOut())", origin: doesThisWork)
+}
 
-
-
-
-
-//End
 
 ///////////////////////////////////////////////////// This func gives each box a specific index from 0...8 and gives each cell a id 0...8 based of the box called. I used a seperator becuase I could not find the original board before making it a string. Will change once we cleanup code. 
 func alterCell(boardString: String, num: Int, boxIndex: Int, cellIndex: Int) -> String {
@@ -407,6 +409,35 @@ func alterCell(boardString: String, num: Int, boxIndex: Int, cellIndex: Int) -> 
     return rows.joined(separator: "\n")
 }
 
-struct sudokuBoard {
-    var boardString : String
+//New shit
+/*
+func repeated(boardString: String, origin: String){
+    if boardString.count > origin.count{
+        let checkTimes = boardString.count
+    }else{
+        let checkTimes = origin.count
+    }
+    var newNumber = 0
+    var oldNumber = 0
+    for x in 0 ... checkTimes{
+        var here = boardString(newNumber)
+        var there = origin(oldNumber)            
+        while here == " " || here == "\n"{
+            newNumber += 1
+            here = boardString(newNumber)
+        }
+        while there == " " || there == "\n"{
+            oldNumber += 1
+            there = origin(oldNumber)
+        }
+        
+    }
 }
+
+func incorrect(boardString: String, origin: String){
+    
+}
+*/
+//End
+
+
