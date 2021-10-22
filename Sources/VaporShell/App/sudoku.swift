@@ -389,7 +389,7 @@ func makeBoard(difficulty:String) -> sudokuBoard{
 
 
 ///////////////////////////////////////////////////// This func gives each box a specific index from 0...8 and gives each cell a id 0...8 based of the box called. I used a seperator becuase I could not find the original board before making it a string. Will change once we cleanup code. 
-func alterCell(boardString: String, num: Int, boxIndex: Int, cellIndex: Int) -> String {
+func alterCell(boardString: String, num: Int?, boxIndex: Int, cellIndex: Int) -> String {
     var rows = boardString.split(separator: "\n").map{String($0)}
     for offset in 0..<rows.count {
         let row = rows[offset]
@@ -401,7 +401,11 @@ func alterCell(boardString: String, num: Int, boxIndex: Int, cellIndex: Int) -> 
             let cellNum = (i % 3) + cellOffset
             let boxNum = (i / 3) + boxOffset
             if (boxNum == boxIndex && cellNum == cellIndex) {
-                cells[i] = String(num)
+                if num != nil{
+                    cells[i] = String(num!)
+                }else{
+                    cells[i] = "-"
+                }
             }
         }
         rows[offset] = cells.joined(separator: " ")   

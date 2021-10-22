@@ -1,5 +1,5 @@
 import Vapor
-
+import Foundation
 //let encoder = JSONEncoder()
 
 ///////////////////
@@ -65,6 +65,7 @@ extension String {
 
 func routes(_ app: Application) throws {
     var runningGames = [Int: sudokuBoard] ()
+    var currentGames : [Int] = []
 
     app.get { req in
         return "It works!"
@@ -76,9 +77,15 @@ func routes(_ app: Application) throws {
     ////////////////////////////////////////////////////////// creates a sudoku board and creates an id to associate with the board
     app.post("games") {req -> [String:String] in
         //let difficulty = String(req.parameters.get("difficulty")!)
-        let difficulty: String? = req.query["difficulty"]
+        let difficulty : String? = req.query["difficulty"]
+
+        if difficulty != "easy" && difficulty != "medium" && difficulty != "hard" && difficulty != "hell"{
+            throw Abort(.badRequest, reason: "Difficulty is invalid")
+        }
+        
         let partialBoard = makeBoard(difficulty:difficulty!)
         let gameID = GameID.createID(runningGames:runningGames)
+        currentGames.append(gameID)
         runningGames[gameID] = partialBoard
         return ["id": String(gameID)]
     }
@@ -105,9 +112,11 @@ func routes(_ app: Application) throws {
     app.get("games",":id","cells", "json") { req -> Board in
         guard let id = req.parameters.get("id", as: Int.self) else {
             //return "id is invalid"
-            throw Abort(.badRequest, reason: "temp.")
+            throw Abort(.badRequest, reason: "id is not a integer")
         }
-        
+        if !currentGames.contains(id){
+            throw Abort(.badRequest, reason: "id is not in use")
+        }
 
         //new
         func repeated(boardString: String) -> [Int]{
@@ -117,16 +126,16 @@ func routes(_ app: Application) throws {
             var newNumber = 0
             
             for x in 1 ... 81{
-                var here = boardString[newNumber]
-                while here == " " || here == "\n"{
+                var currentCellCheck = boardString[newNumber]
+                while currentCellCheck == " " || currentCellCheck == "\n"{
                     newNumber += 1
-                    here = boardString[newNumber]
+                    currentCellCheck = boardString[newNumber]
                 }
                 
-                if here == "-"{
+                if currentCellCheck == "-"{
                     newCells[x] = 0
                 }else{
-                    newCells[x] = Int(here)
+                    newCells[x] = Int(currentCellCheck)
                 }
                 newNumber += 1
             }
@@ -160,23 +169,23 @@ func routes(_ app: Application) throws {
             var oldNumber = 0
             
             for x in 0 ... 80{
-                var here = boardString[newNumber]
-                var there = origin[oldNumber]        
-                while here == " " || here == "\n"{
+                var currentCellCheck = boardString[newNumber]
+                var tcurrentCellCheck = origin[oldNumber]        
+                while currentCellCheck == " " || currentCellCheck == "\n"{
                     newNumber += 1
-                    here = boardString[newNumber]
+                    currentCellCheck = boardString[newNumber]
                 }
-                while there == " " || there == "\n"{
+                while tcurrentCellCheck == " " || tcurrentCellCheck == "\n"{
                     oldNumber += 1
-                    there = origin[oldNumber]
+                    tcurrentCellCheck = origin[oldNumber]
                 }
                 
-                if here == "-"{
+                if currentCellCheck == "-"{
                     newCells[x] = 0
                 }else{
-                    newCells[x] = Int(here)
+                    newCells[x] = Int(currentCellCheck)
                 }
-                originCells[x] = Int(there)
+                originCells[x] = Int(tcurrentCellCheck)
                 newNumber += 1
                 oldNumber += 1
 
@@ -201,12 +210,12 @@ func routes(_ app: Application) throws {
         //let body = Response.Body(string: String(data:data, encoding: .utf8)!)
         //let response = Response(status: .created, body: body)
 
-        let hereWeGo = partialBoard.boardString
+        let currentCellCheckWeGo = partialBoard.boardString
 
         var numTimes = 0
         var lineIndicator = 0
         //var takeNotes = 0
-        var iDontKnow : [String] = []
+        
         var test0 : [Cell] = []
         var test1 : [Cell] = []
         var test2 : [Cell] = []
@@ -216,8 +225,8 @@ func routes(_ app: Application) throws {
         var test6 : [Cell] = []
         var test7 : [Cell] = []
         var test8 : [Cell] = []
-        for x in 0 ..< hereWeGo.length{
-            if hereWeGo[x] != " " && hereWeGo[x] != "\n" && hereWeGo[x] != "n"{
+        for x in 0 ..< currentCellCheckWeGo.length{
+            if currentCellCheckWeGo[x] != " " && currentCellCheckWeGo[x] != "\n" && currentCellCheckWeGo[x] != "n"{
                 if numTimes == 9{
                     lineIndicator += 1
                     numTimes = 0
@@ -248,42 +257,39 @@ func routes(_ app: Application) throws {
                 }
                 
                 var value : Int? = 0
-                if hereWeGo[x] != "-"{
-                    value = Int(hereWeGo[x])!
+                if currentCellCheckWeGo[x] != "-"{
+                    value = Int(currentCellCheckWeGo[x])!
                 }else{
                     value = nil
                 }
-                iDontKnow.append("boxIndex: \(boxIndex)")
-                iDontKnow.append("cellIndex: \(cellIndex)")
-                iDontKnow.append("value: \(value)")
-
+                
                 //Let's begin
-                let yippee = Position(boxIndex:boxIndex, cellIndex:cellIndex)
-                //let chris = try encoder.encode(yippee)
+                let position = Position(boxIndex:boxIndex, cellIndex:cellIndex)
+                //let chris = try encoder.encode(position)
                 //let john = Response.Body(string: String(data:chris, encoding: .utf8)!)
-                let yahaa = Cell(position:yippee, value:value)
-                //let theEpicInfo = try encoder.encode(yahaa)
+                let cell = Cell(position:position, value:value)
+                //let theEpicInfo = try encoder.encode(cell)
                 //let theEpicString = String(data:theEpicInfo, encoding:.utf8)!
-                //test.append(yahaa)
-                switch yahaa.position.boxIndex {
+                //test.append(cell)
+                switch cell.position.boxIndex {
                 case 0:
-                    test0.append(yahaa)
+                    test0.append(cell)
                 case 1:
-                    test1.append(yahaa)
+                    test1.append(cell)
                 case 2:
-                    test2.append(yahaa)
+                    test2.append(cell)
                 case 3:
-                    test3.append(yahaa)
+                    test3.append(cell)
                 case 4:
-                    test4.append(yahaa)
+                    test4.append(cell)
                 case 5:
-                    test5.append(yahaa)
+                    test5.append(cell)
                 case 6:
-                    test6.append(yahaa)
+                    test6.append(cell)
                 case 7:
-                    test7.append(yahaa)
+                    test7.append(cell)
                 case 8:
-                    test8.append(yahaa)
+                    test8.append(cell)
                 default:
                     fatalError("you've done did it now")
                 
@@ -294,7 +300,7 @@ func routes(_ app: Application) throws {
             }
         }
 
-        func figureItOut(badOnes:[Int]) -> Board{
+        func figureItOut(cellIdNumbers:[Int]) -> Board{
             let BoxZero = [0,1,2,9,10,11,18,19,20]
             let BoxOne = [3,4,5,12,13,14,21,22,23]
             let BoxTwo = [6,7,8,15,16,17,24,25,26]
@@ -305,98 +311,96 @@ func routes(_ app: Application) throws {
             let BoxSeven = [57,58,59,66,67,68,75,76,77]
             let BoxEight = [60,61,62,69,70,71,78,79,80]
 
-            var badBox0 : [Cell] = []
-            var badBox1 : [Cell] = []
-            var badBox2 : [Cell] = []
-            var badBox3 : [Cell] = []
-            var badBox4 : [Cell] = []
-            var badBox5 : [Cell] = []
-            var badBox6 : [Cell] = []
-            var badBox7 : [Cell] = []
-            var badBox8 : [Cell] = []
+            var incorrectCells0 : [Cell] = []
+            var incorrectCells1 : [Cell] = []
+            var incorrectCells2 : [Cell] = []
+            var incorrectCells3 : [Cell] = []
+            var incorrectCells4 : [Cell] = []
+            var incorrectCells5 : [Cell] = []
+            var incorrectCells6 : [Cell] = []
+            var incorrectCells7 : [Cell] = []
+            var incorrectCells8 : [Cell] = []
 
             
-            for x in 0 ..< badOnes.count{
-                if BoxZero.contains(badOnes[x]){
+            for x in 0 ..< cellIdNumbers.count{
+                if BoxZero.contains(cellIdNumbers[x]){
                     var thisOne = 0
-                    while BoxZero[thisOne] != badOnes[x]{
+                    while BoxZero[thisOne] != cellIdNumbers[x]{
                         thisOne += 1
                     }
-                    badBox0.append(test0[thisOne])
+                    incorrectCells0.append(test0[thisOne])
                 }
-                if BoxOne.contains(badOnes[x]){
+                if BoxOne.contains(cellIdNumbers[x]){
                     var thisOne = 0
-                    while BoxOne[thisOne] != badOnes[x]{
+                    while BoxOne[thisOne] != cellIdNumbers[x]{
                         thisOne += 1
                     }
-                    badBox1.append(test1[thisOne])
+                    incorrectCells1.append(test1[thisOne])
                 }
-                if BoxTwo.contains(badOnes[x]){
+                if BoxTwo.contains(cellIdNumbers[x]){
                     var thisOne = 0
-                    while BoxTwo[thisOne] != badOnes[x]{
+                    while BoxTwo[thisOne] != cellIdNumbers[x]{
                         thisOne += 1
                     }
-                    badBox2.append(test2[thisOne])
+                    incorrectCells2.append(test2[thisOne])
                 }
-                if BoxThree.contains(badOnes[x]){
+                if BoxThree.contains(cellIdNumbers[x]){
                     var thisOne = 0
-                    while BoxThree[thisOne] != badOnes[x]{
+                    while BoxThree[thisOne] != cellIdNumbers[x]{
                         thisOne += 1
                     }
-                    badBox3.append(test3[thisOne])
+                    incorrectCells3.append(test3[thisOne])
                 }
-                if BoxFour.contains(badOnes[x]){
+                if BoxFour.contains(cellIdNumbers[x]){
                     var thisOne = 0
-                    while BoxFour[thisOne] != badOnes[x]{
+                    while BoxFour[thisOne] != cellIdNumbers[x]{
                         thisOne += 1
                     }
-                    badBox4.append(test4[thisOne])
+                    incorrectCells4.append(test4[thisOne])
                 }
-                if BoxFive.contains(badOnes[x]){
+                if BoxFive.contains(cellIdNumbers[x]){
                     var thisOne = 0
-                    while BoxFive[thisOne] != badOnes[x]{
+                    while BoxFive[thisOne] != cellIdNumbers[x]{
                         thisOne += 1
                     }
-                    badBox5.append(test5[thisOne])
+                    incorrectCells5.append(test5[thisOne])
                 }
-                if BoxSix.contains(badOnes[x]){
+                if BoxSix.contains(cellIdNumbers[x]){
                     var thisOne = 0
-                    while BoxSix[thisOne] != badOnes[x]{
+                    while BoxSix[thisOne] != cellIdNumbers[x]{
                         thisOne += 1
                     }
-                    badBox6.append(test6[thisOne])
+                    incorrectCells6.append(test6[thisOne])
                 }
-                if BoxSeven.contains(badOnes[x]){
+                if BoxSeven.contains(cellIdNumbers[x]){
                     var thisOne = 0
-                    while BoxSeven[thisOne] != badOnes[x]{
+                    while BoxSeven[thisOne] != cellIdNumbers[x]{
                         thisOne += 1
                     }
-                    badBox7.append(test7[thisOne])
+                    incorrectCells7.append(test7[thisOne])
                 }
-                if BoxEight.contains(badOnes[x]){
+                if BoxEight.contains(cellIdNumbers[x]){
                     var thisOne = 0
-                    while BoxEight[thisOne] != badOnes[x]{
+                    while BoxEight[thisOne] != cellIdNumbers[x]{
                         thisOne += 1
                     }
-                    badBox8.append(test8[thisOne])
+                    incorrectCells8.append(test8[thisOne])
                 }
                 
             }
-            let sadBox0 = Box(cells:badBox0)
-            let sadBox1 = Box(cells:badBox1)
-            let sadBox2 = Box(cells:badBox2)
-            let sadBox3 = Box(cells:badBox3)
-            let sadBox4 = Box(cells:badBox4)
-            let sadBox5 = Box(cells:badBox5)
-            let sadBox6 = Box(cells:badBox6)
-            let sadBox7 = Box(cells:badBox7)
-            let sadBox8 = Box(cells:badBox8)
+            let incorrectBox0 = Box(cells:incorrectCells0)
+            let incorrectBox1 = Box(cells:incorrectCells1)
+            let incorrectBox2 = Box(cells:incorrectCells2)
+            let incorrectBox3 = Box(cells:incorrectCells3)
+            let incorrectBox4 = Box(cells:incorrectCells4)
+            let incorrectBox5 = Box(cells:incorrectCells5)
+            let incorrectBox6 = Box(cells:incorrectCells6)
+            let incorrectBox7 = Box(cells:incorrectCells7)
+            let incorrectBox8 = Box(cells:incorrectCells8)
             
-            let notRight : [Box] = [sadBox0, sadBox1, sadBox2, sadBox3, sadBox4, sadBox5, sadBox6, sadBox7, sadBox8]
+            let notRight : [Box] = [incorrectBox0, incorrectBox1, incorrectBox2, incorrectBox3, incorrectBox4, incorrectBox5, incorrectBox6, incorrectBox7, incorrectBox8]
 
-            let chris = Board(board:notRight)
-            return chris
-
+            return Board(board:notRight)
         }
         
         let Box0 = Box(cells:test0)
@@ -413,17 +417,16 @@ func routes(_ app: Application) throws {
 
         let yeahIKnowMrBen : [Box] = [Box0, Box1, Box2, Box3, Box4, Box5, Box6, Box7, Box8]
         //let nonoBaby = String(data:alrightBaby, encoding: .utf8)!
-        let go = Board(board:yeahIKnowMrBen)
-        print(iDontKnow)
+        let allCells = Board(board:yeahIKnowMrBen)
         let wrongs = incorrect(boardString:partialBoard.boardString, origin:partialBoard.origin)
-        let many = repeated(boardString:partialBoard.boardString)
+        let repeatedCells = repeated(boardString:partialBoard.boardString)
         print(wrongs)
         if filter == "all"{
-            return go
+            return allCells
         }else if filter == "incorrect"{
-            return figureItOut(badOnes: wrongs)
+            return figureItOut(cellIdNumbers: wrongs)
         }else if filter == "repeated"{
-            return figureItOut(badOnes: many)
+            return figureItOut(cellIdNumbers: repeatedCells)
         }else{
             throw Abort(.badRequest, reason: "Filter not valid")
         }
@@ -439,17 +442,37 @@ func routes(_ app: Application) throws {
               let cellIndex = req.parameters.get("cellIndex", as: Int.self) else{
              throw Abort(.badRequest, reason: "temp.")
         }
-        
+        if (0 > boxIndex) || (boxIndex > 8){
+            throw Abort(.badRequest, reason: "boxIndex out of range")
+        }
+        if (0 > cellIndex) || (cellIndex > 8){
+            throw Abort(.badRequest, reason: "cellIndex out of range")
+        }
+          if !currentGames.contains(id){
+            throw Abort(.badRequest, reason: "id is not in use")
+        }
+
+         
         
         //let id = Int(req.parameters.get("id")!)!
         //let boxIndex = Int(req.parameters.get("boxIndex")!)!
         //let cellIndex = Int(req.parameters.get("cellIndex")!)!
         let partialBoard = runningGames[id]!
-        let num = Int(req.body.string!)!
+        //let num = Int(req.body.string!)!
         
-        runningGames[id] = sudokuBoard(boardString: alterCell(boardString: partialBoard.boardString, num: num, boxIndex: boxIndex, cellIndex: cellIndex), origin: partialBoard.origin)
+        struct CellValue: Decodable{
+            let value: Int?
+        }
+        let cellValue = try req.content.decode(CellValue.self)
 
-        return alterCell(boardString: partialBoard.boardString, num: num, boxIndex: boxIndex, cellIndex: cellIndex)
+        guard cellValue.value == nil || (1 ... 9).contains(cellValue.value!) else {
+            throw Abort(.badRequest, reason: "temp.")
+        }
+        
+        
+        runningGames[id] = sudokuBoard(boardString: alterCell(boardString: partialBoard.boardString, num: cellValue.value, boxIndex: boxIndex, cellIndex: cellIndex), origin: partialBoard.origin)
+
+        return alterCell(boardString: partialBoard.boardString, num: cellValue.value, boxIndex: boxIndex, cellIndex: cellIndex)
         //return Response(status: .noContent)
     }
 }
