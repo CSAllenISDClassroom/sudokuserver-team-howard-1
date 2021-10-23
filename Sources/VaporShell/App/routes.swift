@@ -91,7 +91,7 @@ func routes(_ app: Application) throws {
     }
 
     ////////////////////////////////////////////////////////// displays the board on the screen givent the boardid number
-    app.get("games",":id","cells") { req -> [String:String] in
+    app.get("games",":id","cells", "bad") { req -> [String:String] in
         guard let id = req.parameters.get("id", as: Int.self) else {
             return ["Error" : "id invalid"]
         }
@@ -109,7 +109,7 @@ func routes(_ app: Application) throws {
     }
 
     //testing out printing in the way Mr.Ben wants because he is the ultimate ruller and dictates how and why things are made
-    app.get("games",":id","cells", "json") { req -> Board in
+    app.get("games",":id","cells") { req -> Board in
         guard let id = req.parameters.get("id", as: Int.self) else {
             //return "id is invalid"
             throw Abort(.badRequest, reason: "id is not a integer")
