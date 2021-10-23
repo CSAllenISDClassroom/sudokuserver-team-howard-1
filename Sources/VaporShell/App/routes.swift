@@ -436,7 +436,7 @@ func routes(_ app: Application) throws {
 
     
     ///////////////////////////////////////////////// given specific board id box and cell allows you to change the value inside of the box
-    app.put("games",":id","cells",":boxIndex",":cellIndex") { req -> String in
+    app.put("games",":id","cells",":boxIndex",":cellIndex") { req -> Response in
         guard let id = req.parameters.get("id", as: Int.self),
               let boxIndex = req.parameters.get("boxIndex", as: Int.self),
               let cellIndex = req.parameters.get("cellIndex", as: Int.self) else{
@@ -472,7 +472,7 @@ func routes(_ app: Application) throws {
         
         runningGames[id] = sudokuBoard(boardString: alterCell(boardString: partialBoard.boardString, num: cellValue.value, boxIndex: boxIndex, cellIndex: cellIndex), origin: partialBoard.origin)
 
-        return alterCell(boardString: partialBoard.boardString, num: cellValue.value, boxIndex: boxIndex, cellIndex: cellIndex)
-        //return Response(status: .noContent)
+        //return alterCell(boardString: partialBoard.boardString, num: cellValue.value, boxIndex: boxIndex, cellIndex: cellIndex)
+        return Response(status: .ok)
     }
 }
