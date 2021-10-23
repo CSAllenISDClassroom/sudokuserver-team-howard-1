@@ -466,7 +466,7 @@ func routes(_ app: Application) throws {
         let cellValue = try req.content.decode(CellValue.self)
 
         guard cellValue.value == nil || (1 ... 9).contains(cellValue.value!) else {
-            throw Abort(.badRequest, reason: "temp.")
+            throw Abort(.badRequest, reason: "value is invalid")
         }
         
         
